@@ -15,6 +15,8 @@ The image also comes with [inotify](http://man7.org/linux/man-pages/man7/inotify
 	- `PUID` (user id)
 	- `PGID` (user group)
 	- `TZ` (timezone, e.g. `Europe/Paris`)
+- Arguments:
+	- `CADDY_PLUGINS` (see below)
 
 ### Plugins
 
