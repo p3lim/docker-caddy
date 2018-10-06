@@ -1,9 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-# watch /config/Caddyfile and reload Caddy if a valid change
-while inotifywait -qq -e modify /config/Caddyfile; do
-	if /usr/local/bin/caddy -validate -conf /config/Caddyfile; then
-		s6-svc -1 /var/run/s6/services/caddy
-		echo "Caddy was reloaded"
-	fi
-done

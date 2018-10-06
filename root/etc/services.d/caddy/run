@@ -1,4 +1,7 @@
 #!/usr/bin/with-contenv bash
 
-exec s6-setuidgid abc /usr/local/bin/caddy -conf /config/Caddyfile -agree
-
+# https://caddyserver.com/docs/cli
+# agree to the Let's Encrypt Subscriber Agreement (https://letsencrypt.org/repository/)
+# specify the config file manually since we're using a non-default config directory
+# specify a global log file (which rotates)
+exec s6-setuidgid abc /usr/local/bin/caddy -conf /config/Caddyfile -agree -log /logs/caddy.log

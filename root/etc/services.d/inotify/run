@@ -1,0 +1,14 @@
+#!/usr/bin/with-contenv bash
+
+# watch /config for any changes
+while inotifywait -qq -e modify,create,delete -r /config; do
+	# when there's any change, attempt to validate /config/Caddyfile
+	if /usr/local/bin/caddy -validate -conf /config/Caddyfile; then
+		# if /config/Caddyfile is valid, signal Caddy to gracefully restart
+		# https://caddyserver.com/docs/cli
+		s6-svc -1 /var/run/s6/services/caddy
+
+		# log the reload
+		echo "Caddy was reloaded"
+	fi
+done

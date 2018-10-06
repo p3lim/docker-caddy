@@ -2,10 +2,12 @@ FROM p3lim/alpine:latest
 
 ARG CADDY_PLUGINS=''
 
-# set home for the user (acme needs this)
-ENV HOME='/config'
 
-# install dependencies
+# set the path to store assets
+# https://caddyserver.com/docs/cli
+ENV CADDYPATH="/data"
+
+# install dependencies and tools
 RUN apk add --no-cache curl libcap inotify-tools
 
 # install Caddy with plugins
@@ -20,4 +22,4 @@ COPY root/ /
 
 # expose ourselves
 EXPOSE 80 443
-VOLUME /config
+VOLUME /config /logs /data
