@@ -1,4 +1,4 @@
-FROM p3lim/alpine:3.7
+FROM p3lim/alpine:latest
 
 ARG CADDY_PLUGINS=''
 
