@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv bash
+
+# let Caddy print version and plugins itself
+/usr/local/bin/caddy -version
+echo
+/usr/local/bin/caddy -plugins

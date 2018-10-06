@@ -1,11 +1,10 @@
 #!/usr/bin/with-contenv bash
 
-# copy config
-shopt -s globstar nullglob
-for i in /defaults/*; do
-	[[ ! -e "/config/${i#/defaults/}" ]] && \
-		cp -rv "$i" "/config/${i#/defaults/}"
-done
+# empty config = fresh install (presumably)
+if [ -z "$(ls -A /config)" ]; then
+	# copy default config
+	cp -r "/defaults/." "/config"
 
-# permissions
-chown abc:abc -R /config
+	# update permissions
+	chown abc:abc -R /config
+fi
