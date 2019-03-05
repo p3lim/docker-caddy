@@ -1,23 +1,30 @@
-FROM p3lim/alpine:latest
+FROM golang:1.12-alpine AS build
 
-# version label
-ARG VERSION="0.11.0"
-LABEL version="$APP_VERSION"
+ENV VERSION v0.11.5
 
-# build-time arguments
-ARG PLUGINS=""
+# install build deps
+RUN apk add --no-cache git
+
+# clone and checkout version
+RUN go get github.com/mholt/caddy/caddy
+RUN go get github.com/caddyserver/builds
+WORKDIR $GOPATH/src/github.com/mholt/caddy/caddy
+RUN git checkout tags/$VERSION
+
+# build
+RUN go run build.go -goos=linux -goarch=amd64
+
+FROM p3lim/alpine:3.8
 
 # set the path to store assets
 # https://caddyserver.com/docs/cli
-ENV CADDYPATH="/data"
+ENV CADDYPATH "/data"
 
-# install dependencies and tools
-RUN apk add --no-cache curl libcap inotify-tools
+# copy binary from build stage
+COPY --from=build /go/src/github.com/mholt/caddy/caddy/caddy /usr/local/bin/
 
-# install Caddy with plugins
-RUN curl -Lo /tmp/caddy.tar.gz "https://caddyserver.com/download/linux/amd64?license=personal&plugins=$PLUGINS"
-RUN tar xzf /tmp/caddy.tar.gz -C /usr/local/bin/
-RUN rm /tmp/caddy.tar.gz
+# install tools
+RUN apk add --no-cache libcap inotify-tools
 
 # give Caddy permissions to reserve low ports
 RUN setcap cap_net_bind_service=+ep /usr/local/bin/caddy
