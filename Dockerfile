@@ -11,6 +11,9 @@ RUN go get github.com/caddyserver/builds
 WORKDIR $GOPATH/src/github.com/mholt/caddy/caddy
 RUN git checkout tags/$VERSION
 
+# disable telemetry
+RUN sed -i 's/var EnableTelemetry = true/var EnableTelemetry = false/' caddymain/run.go
+
 # build
 RUN go run build.go -goos=linux -goarch=amd64
 
